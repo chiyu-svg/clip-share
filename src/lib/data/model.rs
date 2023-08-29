@@ -1,8 +1,9 @@
 
 
 use chrono::NaiveDateTime;
-use crate::domain::{ ClipError, DbId, Time};
-use crate::domain::ShortCode;
+use crate::domain::{ ShortCode, ClipError, DbId, Time};
+use crate::service::ask;
+use chrono::Utc;
 
 
 /// select and retireved from database
@@ -17,6 +18,7 @@ pub struct Clip {
     pub(in crate::data) password: Option<String>,
     pub(in crate::data) hits: i64
 }
+
 
 impl TryFrom<Clip> for crate::domain::Clip {
     type Error = ClipError;
@@ -55,22 +57,58 @@ impl From<ShortCode> for GetClip {
     }
 }
 
+/// [crate::service::ask::GetClip] Into (`GetClip`)
+impl From<ask::GetClip> for GetClip {
+    fn from(get_clip: ask::GetClip) -> Self {
+        Self::from(get_clip.shortcode)
+    }
+}
+
+
 /// (`new_clip`)[crate::data::query::new_clip] 新增 [`Clip`]
 pub struct NewClip {
     pub(in crate::data) clip_id: String,
     pub(in crate::data) shortcode: String,
     pub(in crate::data) content: String,
     pub(in crate::data) title: Option<String>,
-    pub(in crate::data) posted: NaiveDateTime,
-    pub(in crate::data) expires: Option<NaiveDateTime>,
+    pub(in crate::data) posted: i64,
+    pub(in crate::data) expires: Option<i64>,
     pub(in crate::data) password: Option<String>
 }
+
+impl From<ask::NewClip> for NewClip {
+    fn from(clip: ask::NewClip) -> Self {
+        Self { 
+            clip_id: DbId::new().into(), 
+            shortcode: ShortCode::new().into_inner(), 
+            content: clip.content.into_inner(), 
+            title: clip.title.into_inner(), 
+            posted: Utc::now().timestamp(), 
+            expires: clip.expires.into_inner().map(|time| time.timestamp()), 
+            password: clip.password.into_inner()
+        }
+    }
+}
+
 
 /// (`update_clip`)[crate::data::query::update_clip] 根据 shortcode 修改 [`Clip`]
 pub struct UpdateClip {
     pub(in crate::data) shortcode: String,
     pub(in crate::data) content: String,
     pub(in crate::data) title: Option<String>,
-    pub(in crate::data) expires: Option<NaiveDateTime>,
+    pub(in crate::data) expires: Option<i64>,
     pub(in crate::data) password: Option<String>
 }
+
+impl From<ask::UpdateClip> for UpdateClip {
+    fn from(clip: ask::UpdateClip) -> Self {
+        Self { 
+            shortcode: clip.shortcode.into_inner(), 
+            content: clip.content.into_inner(), 
+            title: clip.title.into_inner(), 
+            expires: clip.expires.into_inner().map(|time| time.timestamp()), 
+            password: clip.password.into_inner()
+        }
+    }
+}
+
