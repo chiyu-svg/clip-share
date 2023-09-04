@@ -1,6 +1,8 @@
 pub mod httpd;
 pub mod form;
 
+pub const PASSWORD_COOKIE: &str = "password";
+
 #[derive(rocket::Responder, Debug)]
 pub enum PageError {
     #[response(status = 500)]
@@ -9,6 +11,8 @@ pub enum PageError {
     Render(String),
     #[response(status = 404)]
     NotFound(String),
+    #[response(status = 401)]
+    NoPermissions(String),
     #[response(status = 500)]
     Internal(String),
     #[response(status = 500)]

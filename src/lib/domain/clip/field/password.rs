@@ -17,9 +17,9 @@ impl Password {
         match password {
             Some(password) => {
                 if !password.trim().is_empty() {
-                    Ok(Self(None))
-                } else {
                     Ok(Self(Some(password)))
+                } else {
+                    Ok(Self(None))
                 }
             },
             None => Ok(Self(None))

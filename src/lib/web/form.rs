@@ -38,6 +38,12 @@ pub struct NewClipJson {
     pub password: field::Password
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct GetClipPasswordProtected {
+    pub password: field::Password
+}
+
 
 #[derive(Debug, FromForm)]
 pub struct UpdateClip {

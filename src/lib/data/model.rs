@@ -64,7 +64,7 @@ impl From<ask::GetClip> for GetClip {
     }
 }
 
-
+#[derive(Debug)]
 /// (`new_clip`)[crate::data::query::new_clip] 新增 [`Clip`]
 pub struct NewClip {
     pub(in crate::data) clip_id: String,

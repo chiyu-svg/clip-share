@@ -9,8 +9,11 @@ pub async fn get_clip(
     req: ask::GetClip,
     pool: &DatabasePool
 ) -> Result<Clip, ServiceError> {
-    let user_password = req.password.clone();
+    let user_password = req.password.clone(); //todo
     let clip: Clip = query::get_clip(pool, req).await?.try_into()?;
+    if clip.password.has_password() && !user_password.has_password() {
+        return Err(ServiceError::PermissionError("Invalid password".to_string()));
+    }
     if user_password.has_password() {
         if user_password == clip.password {
             Ok(clip)

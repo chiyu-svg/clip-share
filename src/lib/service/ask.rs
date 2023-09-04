@@ -3,6 +3,7 @@ use crate::domain::ShortCode;
 use crate::domain::field::Password;
 use crate::web::form;
 
+#[derive(Debug)]
 /// The (`GetClip`) fro [`crate::service::action::get_clip`]
 pub struct GetClip {
     pub shortcode: field::ShortCode,
@@ -18,6 +19,7 @@ impl From<ShortCode> for GetClip {
     }
 }
 
+#[derive(Debug)]
 /// The (`NewClip`) fro [`crate::service::action::new_clip`]
 pub struct NewClip {
     pub content: field::Content,

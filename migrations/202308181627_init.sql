@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS clips
     title     TEXT,
     posted    DATETIME NOT NULL,
     expires   DATETIME,
-    password  TEXT,
+    `password`  TEXT,
     hits      BIGINT NOT NULL
 );
